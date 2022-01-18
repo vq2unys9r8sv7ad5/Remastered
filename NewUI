@@ -779,9 +779,9 @@ function Library:Window()
 				end)
 			end
 			
-			ColorH = 1 - (math.clamp(HueSelection.AbsolutePosition.Y + 9 - Hue.AbsolutePosition.Y,0,Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-			ColorS = (math.clamp(ColorSelection.AbsolutePosition.X + 9 - Color.AbsolutePosition.X,0,Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
-			ColorV = 1 - (math.clamp(ColorSelection.AbsolutePosition.Y + 9 - Color.AbsolutePosition.Y,0,Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
+			ColorH = 1 - math.clamp(HueSelection.AbsolutePosition.Y + 9 - Hue.AbsolutePosition.Y,0,Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y
+			ColorS = math.clamp(ColorSelection.AbsolutePosition.X + 9 - Color.AbsolutePosition.X,0,Color.AbsoluteSize.X) / Color.AbsoluteSize.X
+			ColorV = 1 - math.clamp(ColorSelection.AbsolutePosition.Y + 9 - Color.AbsolutePosition.Y,0,Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y
 			
 			UpdateColorPicker()
 			
