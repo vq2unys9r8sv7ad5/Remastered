@@ -146,7 +146,7 @@ function Library:Window()
     
 	TabHolder.BackgroundTransparency = 1
 	TabHolder.Name = "TabHolder"
-	TabHolder.Size = UDim2.new(1,0,0,30)
+	TabHolder.Size = UDim2.new(1,0,1,0)
     
 	TabHolderList.Name = "TabHolderList"
 	TabHolderList.FillDirection = "Horizontal"
@@ -674,6 +674,7 @@ function Library:Window()
 			local RainbowStatusCorner = Instance.new("UICorner",RainbowStatus)
 			
 			ColorpickerFrame.BackgroundColor3 = Color3.fromRGB(39,39,39)
+			ColorpickerFrame.BorderSizePixel = 0
 			ColorpickerFrame.Name = "ColorpickerFrame"
 			ColorpickerFrame.Size = UDim2.new(1,-8,0,0)
 			ColorpickerFrame.Visible = false
@@ -682,7 +683,7 @@ function Library:Window()
 			ColorpickerFrameCorner.CornerRadius = UDim.new(0,6)
 			ColorpickerFrameCorner.Name = "ColorpickerFrameCorner"
 			
-			Color.BackgroundColor3 = Default
+			Color.BackgroundColor3 = Color3.fromHSV(Color3.toHSV(Default),1,1)
 			Color.Name = "Color"
 			Color.Position = UDim2.new(0,11,0,9)
 			Color.Size = UDim2.new(0,212,0,93)
@@ -695,7 +696,7 @@ function Library:Window()
 			ColorSelection.AnchorPoint = Vector2.new(0.5,0.5)
 			ColorSelection.BackgroundTransparency = 1
 			ColorSelection.Name = "ColorSelection"
-			ColorSelection.Position = UDim2.new(Default and select(3,Color3.toHSV(Default)),0,0,0)
+			ColorSelection.Position = UDim2.new(select(2,Color3.toHSV(Default)),0,1 - select(3,Color3.toHSV(Default)),0)
 			ColorSelection.Size = UDim2.new(0,18,0,18)
 			ColorSelection.ZIndex = 25
 			ColorSelection.Image = "rbxassetid://4805639000"
@@ -724,13 +725,13 @@ function Library:Window()
 			HueSelection.AnchorPoint = Vector2.new(0.5,0.5)
 			HueSelection.BackgroundTransparency = 1
 			HueSelection.Name = "HueSelection"
-			HueSelection.Position = UDim2.new(0.5,0,1 - select(1,Color3.toHSV(Default)),0)
+			HueSelection.Position = UDim2.new(0.5,0,1 - Color3.toHSV(Default),0)
 			HueSelection.Size = UDim2.new(0,18,0,18)
 			HueSelection.Image = "rbxassetid://4805639000"
 			
 			RainbowToggle.BackgroundTransparency = 1
 			RainbowToggle.Name = "RainbowToggle"
-			RainbowToggle.Position = UDim2.new(0,268,0,41)
+			RainbowToggle.Position = UDim2.new(0,268,0,27)
 			RainbowToggle.Size = UDim2.new(0,212,0,29)
 			RainbowToggle.Text = ""
 			
@@ -754,7 +755,7 @@ function Library:Window()
 			
 			Confirm.BackgroundTransparency = 1
 			Confirm.Name = "Confirm"
-			Confirm.Position = UDim2.new(0,268,0,73)
+			Confirm.Position = UDim2.new(0,268,0,59)
 			Confirm.Size = UDim2.new(0,212,0,29)
 			Confirm.Font = "Gotham"
 			Confirm.Text = "Confirm"
@@ -778,16 +779,11 @@ function Library:Window()
 				end)
 			end
 			
-			ColorH = 1 - (math.clamp(HueSelection.AbsolutePosition.Y - Hue.AbsolutePosition.Y,0,Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-			ColorS = (math.clamp(ColorSelection.AbsolutePosition.X - Color.AbsolutePosition.X,0,Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
-			ColorV = 1 - (math.clamp(ColorSelection.AbsolutePosition.Y - Color.AbsolutePosition.Y,0,Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
+			ColorH = 1 - (math.clamp(HueSelection.AbsolutePosition.Y + 9 - Hue.AbsolutePosition.Y,0,Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
+			ColorS = (math.clamp(ColorSelection.AbsolutePosition.X + 9 - Color.AbsolutePosition.X,0,Color.AbsoluteSize.X) / Color.AbsoluteSize.X)
+			ColorV = 1 - (math.clamp(ColorSelection.AbsolutePosition.Y + 9 - Color.AbsolutePosition.Y,0,Color.AbsoluteSize.Y) / Color.AbsoluteSize.Y)
 			
-			CurrentColor.BackgroundColor3 = Default
-			Color.BackgroundColor3 = Default
-			
-			spawn(function()
-				pcall(Callback,CurrentColor.BackgroundColor3)
-			end)
+			UpdateColorPicker()
 			
 			Colorpicker.MouseButton1Click:Connect(function()
 				if Down then
@@ -1033,7 +1029,7 @@ function Library:Window()
 			
 			BindLabel.BackgroundTransparency = 1
 			BindLabel.Name = "BindLabel"
-			BindLabel.Size = UDim2.new(1,0,0,20)
+			BindLabel.Size = UDim2.new(1,0,1,0)
 			BindLabel.Font = "Gotham"
 			BindLabel.Text = KeyName
 			BindLabel.TextColor3 = Color3.fromRGB(195,195,195)
