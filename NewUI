@@ -86,6 +86,7 @@ end
 local DarkHub = Instance.new("ScreenGui")
 
 DarkHub.Name = "MarkBeatsIsGay"
+DarkHub.OnTopOfCoreBlur = true
 DarkHub.ZIndexBehavior = "Sibling"
 
 if syn and syn.protect_gui then
