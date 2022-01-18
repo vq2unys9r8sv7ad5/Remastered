@@ -388,7 +388,7 @@ function Library:Window()
 			Value.Name = "Value"
 			Value.Size = UDim2.new(1,0,1,0)
 			Value.Font = "Gotham"
-			Value.Text = 0
+			Value.Text = Min
 			Value.TextColor3 = Color3.fromRGB(195,195,195)
 			Value.TextSize = 14
 			
