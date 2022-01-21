@@ -105,7 +105,9 @@ UserInput.InputBegan:Connect(function(Input)
 						v2.BackgroundColor3 = Color3.fromRGB(39,39,39)
 					elseif v2.Name == "DropdownFrame" then
 						for i3,v3 in pairs(v3.DropItemHolder) do
-							v2.BackgroundColor3 = Color3.fromRGB(39,39,39)
+							if v3:IsA("TextButton") then
+								v2.BackgroundColor3 = Color3.fromRGB(39,39,39)
+							end
 						end
 					end
 				end
