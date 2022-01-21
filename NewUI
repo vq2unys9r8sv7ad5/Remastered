@@ -99,13 +99,13 @@ UserInput.InputBegan:Connect(function(Input)
 		DarkHub.Enabled = not DarkHub.Enabled
 		
 		if DarkHub:FindFirstChild("MainFrame") then
-			for i,v in pairs(DarkHub.Containers:GetChildren()) do
+			for i,v in pairs(DarkHub.MainFrame.Containers:GetChildren()) do
 				for i2,v2 in pairs(v.ItemHolder:GetChildren()) do
 					if v2.Name == "Button" or v2.Name == "Toggle" or v2.Name == "Dropdown" or v2.Name == "Colorpicker" or v2.Name == "Bind" then
 						v2.BackgroundColor3 = Color3.fromRGB(39,39,39)
 					elseif v2.Name == "DropdownFrame" then
 						for i3,v3 in pairs(v3.DropItemHolder) do
-							v2.BackgroundColor3 = Color3.fromRGB(39,39,39(
+							v2.BackgroundColor3 = Color3.fromRGB(39,39,39)
 						end
 					end
 				end
