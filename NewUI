@@ -39,7 +39,7 @@ local function MakeDraggable(TopBar,Object)
 		end)
 		
 		UserInput.InputChanged:Connect(function(Input)
-			if Input == DragInput and Dragging then
+			if Input == DragInput and Dragging and Object.Parent.Enabled then
 				local Delta = Input.Position - MousePosition
 				
 				Object.Position = FramePosition + UDim2.new(0,Delta.X,0,Delta.Y)
@@ -97,6 +97,20 @@ DarkHub.Parent = gethui and gethui() or CoreGui
 UserInput.InputBegan:Connect(function(Input)
 	if Input.KeyCode == Enum.KeyCode.RightControl then
 		DarkHub.Enabled = not DarkHub.Enabled
+		
+		if DarkHub:FindFirstChild("MainFrame") then
+			for i,v in pairs(DarkHub.Containers:GetChildren()) do
+				for i2,v2 in pairs(v.ItemHolder:GetChildren()) do
+					if v2.Name == "Button" or v2.Name == "Toggle" or v2.Name == "Dropdown" or v2.Name == "Colorpicker" or v2.Name == "Bind" then
+						v2.BackgroundColor3 = Color3.fromRGB(39,39,39)
+					elseif v2.Name == "DropdownFrame" then
+						for i3,v3 in pairs(v3.DropItemHolder) do
+							v2.BackgroundColor3 = Color3.fromRGB(39,39,39(
+						end
+					end
+				end
+			end
+		end
 	end
 end)
 
@@ -435,7 +449,11 @@ function Library:Window()
 			
 			UserInput.InputChanged:Connect(function(Input)
 				if Input.UserInputType == Enum.UserInputType.MouseMovement and Dragging then
-					Slide(Input)
+					if DarkHub.Enabled then
+						Slide(Input)
+					else
+						Dragging = false
+					end
 				end
 			end)
 			
@@ -522,7 +540,7 @@ function Library:Window()
 			
 			Dropdown.MouseButton1Click:Connect(function()
 				if Down then
-					Down = not Down
+					Down = false
 					
 					Tween:Create(Title,TweenInfo.new(0.3),{TextTransparency = 0}):Play()
 					Tween:Create(DropToggle,TweenInfo.new(0.3),{Rotation = 0}):Play()
@@ -539,7 +557,7 @@ function Library:Window()
 					
 					ItemHolder.CanvasSize = UDim2.new(0,0,0,ItemHolderList.AbsoluteContentSize.Y)
 				else
-					Down = not Down
+					Down = true
 					
 					Tween:Create(Title,TweenInfo.new(0.3),{TextTransparency = 0.5}):Play()
 					Tween:Create(DropToggle,TweenInfo.new(0.3),{Rotation = 360}):Play()
@@ -787,7 +805,7 @@ function Library:Window()
 			
 			Colorpicker.MouseButton1Click:Connect(function()
 				if Down then
-					Down = not Down
+					Down = false
 					
 					ColorpickerFrame:TweenSize(UDim2.new(1,-8,0,0),"Out","Quart",0.1,true)
 					wait(0.05)
@@ -798,7 +816,7 @@ function Library:Window()
 					
 					ItemHolder.CanvasSize = UDim2.new(0,0,0,ItemHolderList.AbsoluteContentSize.Y)
 				else
-					Down = not Down
+					Down = true
 					
 					ColorpickerFrame.Visible = true
 					
@@ -824,6 +842,10 @@ function Library:Window()
 						ColorS = ColorX
 						ColorV = 1 - ColorY
 						
+						if not DarkHub.Enabled then
+							ColorInput:Disconnect()
+						end
+						
 						UpdateColorPicker()
 					end)
 				end
@@ -846,6 +868,10 @@ function Library:Window()
 						
 						HueSelection.Position = UDim2.new(0.5,0,HueY,0)
 						ColorH = 1 - HueY
+						
+						if not DarkHub.Enabled then
+							HueInput:Disconnect()
+						end
 						
 						UpdateColorPicker()
 					end)
@@ -922,7 +948,7 @@ function Library:Window()
 			ItemHolder.CanvasSize = UDim2.new(0,0,0,ItemHolderList.AbsoluteContentSize.Y)
 		end
 		
-		function TabContainer:Textbox(Text,Disapper,Callback)
+		function TabContainer:Textbox(Text,Disapper,Callback,Default)
 			local Textbox = Instance.new("Frame",ItemHolder)
 			local TextboxCorner = Instance.new("UICorner",Textbox)
 			local Title = Instance.new("TextLabel",Textbox)
@@ -952,7 +978,7 @@ function Library:Window()
 			TextBox.Position = UDim2.new(1,-7,0,5)
 			TextBox.Size = UDim2.new(0,192,0,26)
 			TextBox.Font = "Gotham"
-			TextBox.Text = ""
+			TextBox.Text = not Dissapear and Default or ""
 			TextBox.TextColor3 = Color3.fromRGB(195,195,195)
 			TextBox.TextSize = 14
 			
