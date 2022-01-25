@@ -85,6 +85,7 @@ end
 
 local DarkHub = Instance.new("ScreenGui")
 
+DarkHub.DisplayOrder = 1
 DarkHub.Name = "MarkBeatsIsGay"
 DarkHub.ZIndexBehavior = "Sibling"
 
