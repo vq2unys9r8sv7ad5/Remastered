@@ -1,0 +1,312 @@
+local CoreGui = game:GetService("CoreGui")
+local Tween = game:GetService("TweenService")
+local SupportedGames = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/vq2unys9r8sv7ad5/Remastered/main/SupportedGames"))
+local PatchNotes = game:HttpGet("https://raw.githubusercontent.com/vq2unys9r8sv7ad5/Remastered/main/PatchNotes")
+local Credits = game:HttpGet("https://raw.githubusercontent.com/vq2unys9r8sv7ad5/Remastered/main/Credits")
+local Executor = identifyexecutor and identifyexecutor() or secure_load and "Sentinel" or pebc_execute and "ProtoSmasher" or is_sirhurt_closure and "Sirhurt" or syn and "Synapse X" or KNRL_LOADED and "Krnl" or "Unidentified Executor"
+
+function IsSupported()
+	for i,v in pairs(SupportedGames) do
+		if game.PlaceId == v then
+			return true
+		end
+	end
+end
+
+local function Load()
+	local DarkHubLoader = Instance.new("ScreenGui")
+	local MainFrame = Instance.new("Frame",DarkHubLoader)
+	local MainFrameCorner = Instance.new("UICorner",MainFrame)
+	local TitleMain = Instance.new("TextLabel",MainFrame)
+	local GlowMain = Instance.new("ImageLabel",MainFrame)
+	local ContainerMain = Instance.new("Frame",MainFrame)
+	local ContainerMainCorner = Instance.new("UICorner",ContainerMain)
+	local GameText = Instance.new("TextLabel",ContainerMain)
+	local LoadButton = Instance.new("TextButton",ContainerMain)
+	local LoadButtonCorner = Instance.new("UICorner",LoadButton)
+	local InfoFrame = Instance.new("Frame",DarkHubLoader)
+	local InfoFrameCorner = Instance.new("UICorner",InfoFrame)
+	local TitleInfo = Instance.new("TextLabel",InfoFrame)
+	local GlowInfo = Instance.new("ImageLabel",InfoFrame)
+	local ContainerInfo = Instance.new("Frame",InfoFrame)
+	local ContainerInfoCorner = Instance.new("UICorner",ContainerInfo)
+	local UpdateLogText = Instance.new("TextLabel",ContainerInfo)
+	local CreditsFrame = Instance.new("Frame",DarkHubLoader)
+	local CreditsFrameCorner = Instance.new("UICorner",CreditsFrame)
+	local TitleCredits = Instance.new("TextLabel",CreditsFrame)
+	local GlowCredits = Instance.new("ImageLabel",CreditsFrame)
+	local ContainerCredits = Instance.new("Frame",CreditsFrame)
+	local ContainerCreditsCorner = Instance.new("UICorner",ContainerCredits)
+	local CreditsText = Instance.new("TextLabel",ContainerCredits)
+	local Clicked = false
+	local Texts = {
+		TitleMain,
+		GameText,
+		LoadButton,
+		TitleInfo,
+		UpdateLogText,
+		TitleCredits,
+		CreditsText
+	}
+	local Frames = {
+		MainFrame,
+		ContainerMain,
+		LoadButton,
+		InfoFrame,
+		ContainerInfo,
+		CreditsFrame,
+		ContainerCredits
+	}
+	local Glows = {
+		GlowMain,
+		GlowInfo,
+		GlowCredits
+	}
+	
+	DarkHubLoader.DisplayOrder = 1
+	DarkHubLoader.Name = "DarkHubLoader"
+	DarkHubLoader.ZIndexBehavior = "Sibling"
+	
+	if syn and syn.protect_gui then
+		syn.protect_gui(DarkHubLoader)
+	end
+	
+	DarkHubLoader.Parent = gethui and gethui() or CoreGui
+	
+	MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
+	MainFrame.BackgroundColor3 = Color3.fromRGB(79,79,79)
+	MainFrame.BackgroundTransparency = 1
+	MainFrame.Name = "MainFrame"
+	MainFrame.Position = UDim2.new(0.5,0,0.5,0)
+	MainFrame.Size = UDim2.new(0,393,0,191)
+	
+	MainFrameCorner.CornerRadius = UDim.new(0,11)
+	MainFrameCorner.Name = "MainFrameCorner"
+	
+	TitleMain.AnchorPoint = Vector2.new(0,0.5)
+	TitleMain.BackgroundTransparency = 1
+	TitleMain.Name = "TitleMain"
+	TitleMain.Position = UDim2.new(0,0,0.5,-55)
+	TitleMain.Size = UDim2.new(1,0,0,30)
+	TitleMain.Font = "Gotham"
+	TitleMain.Text = "Dark Hub - "..Executor
+	TitleMain.TextColor3 = Color3.fromRGB(168,168,168)
+	TitleMain.TextSize = 20
+	TitleMain.TextTransparency = 1
+	
+	GlowMain.BackgroundTransparency = 1
+	GlowMain.BorderSizePixel = 0
+	GlowMain.Name = "GlowMain"
+	GlowMain.Position = UDim2.new(0,-19,0,-12)
+	GlowMain.Size = UDim2.new(1,38,1,24)
+	GlowMain.ZIndex = 0
+	GlowMain.Image = "rbxassetid://297774371"
+	GlowMain.ImageColor3 = Color3.fromRGB(15,15,15)
+	GlowMain.ImageTransparency = 1
+	GlowMain.SliceCenter = Rect.new(20,20,280,280)
+	
+	ContainerMain.AnchorPoint = Vector2.new(0.5,0.5)
+	ContainerMain.BackgroundColor3 = Color3.fromRGB(33,33,33)
+	ContainerMain.BackgroundTransparency = 1
+	ContainerMain.Name = "ContainerMain"
+	ContainerMain.Position = UDim2.new(0.5,0,0.5,30)
+	ContainerMain.Size = UDim2.new(1,-26,1,-84)
+	
+	ContainerMainCorner.CornerRadius = UDim.new(0,11)
+	ContainerMainCorner.Name = "ContainerMainCorner"
+	
+	GameText.AnchorPoint = Vector2.new(0,0.5)
+	GameText.BackgroundTransparency = 1
+	GameText.Name = "GameText"
+	GameText.Position = UDim2.new(0,0,0.5,-20)
+	GameText.Size = UDim2.new(1,0,0,30)
+	GameText.Font = "Gotham"
+	GameText.Text = IsSupported() and "Supported - "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name or "Not Supported - Universal"
+	GameText.TextColor3 = Color3.fromRGB(168,168,168)
+	GameText.TextSize = 20
+	GameText.TextTransparency = 1
+	
+	LoadButton.AnchorPoint = Vector2.new(0.5,0.5)
+	LoadButton.AutoButtonColor = false
+	LoadButton.BackgroundColor3 = Color3.fromRGB(39,39,39)
+	LoadButton.BackgroundTransparency = 1
+	LoadButton.Name = "LoadButton"
+	LoadButton.Position = UDim2.new(0.5,0,0.5,17)
+	LoadButton.Size = UDim2.new(1,-54,0,29)
+	LoadButton.Font = "Gotham"
+	LoadButton.Text = "Load"
+	LoadButton.TextColor3 =Color3.fromRGB(195,195,195)
+	LoadButton.TextSize = 14
+	LoadButton.TextTransparency = 1
+	
+	LoadButtonCorner.CornerRadius = UDim.new(0,6)
+	LoadButtonCorner.Name = "LoadButtonCorner"
+	
+	InfoFrame.AnchorPoint = Vector2.new(0.5,0.5)
+	InfoFrame.BackgroundColor3 = Color3.fromRGB(79,79,79)
+	InfoFrame.BackgroundTransparency = 1
+	InfoFrame.Name = "InfoFrame"
+	InfoFrame.Position = UDim2.new(0.5,-320,0.5,0)
+	InfoFrame.Size = UDim2.new(0,192,0,191)
+	
+	InfoFrameCorner.CornerRadius = UDim.new(0,11)
+	InfoFrameCorner.Name = "InfoFrameCorner"
+	
+	TitleInfo.AnchorPoint = Vector2.new(0,0.5)
+	TitleInfo.BackgroundTransparency = 1
+	TitleInfo.Name = "TitleInfo"
+	TitleInfo.Position = UDim2.new(0,0,0.5,-55)
+	TitleInfo.Size = UDim2.new(1,0,0,30)
+	TitleInfo.Font = "Gotham"
+	TitleInfo.Text = "Info"
+	TitleInfo.TextColor3 = Color3.fromRGB(168,168,168)
+	TitleInfo.TextSize = 20
+	TitleInfo.TextTransparency = 1
+	
+	GlowInfo.BackgroundTransparency = 1
+	GlowInfo.BorderSizePixel = 0
+	GlowInfo.Name = "GlowInfo"
+	GlowInfo.Position = UDim2.new(0,-14,0,-12)
+	GlowInfo.Size = UDim2.new(1,28,1,24)
+	GlowInfo.ZIndex = 0
+	GlowInfo.Image = "rbxassetid://297774371"
+	GlowInfo.ImageColor3 = Color3.fromRGB(15,15,15)
+	GlowInfo.ImageTransparency = 1
+	GlowInfo.SliceCenter = Rect.new(20,20,280,280)
+	
+	ContainerInfo.AnchorPoint = Vector2.new(0.5,0.5)
+	ContainerInfo.BackgroundColor3 = Color3.fromRGB(33,33,33)
+	ContainerInfo.BackgroundTransparency = 1
+	ContainerInfo.Name = "ContainerInfo"
+	ContainerInfo.Position = UDim2.new(0.5,0,0.5,30)
+	ContainerInfo.Size = UDim2.new(1,-14,1,-84)
+	
+	ContainerInfoCorner.CornerRadius = UDim.new(0,11)
+	ContainerInfoCorner.Name = "ContainerInfoCorner"
+	
+	UpdateLogText.AnchorPoint = Vector2.new(0.5,0.5)
+	UpdateLogText.BackgroundTransparency = 1
+	UpdateLogText.Name = "UpdateLogText"
+	UpdateLogText.Position = UDim2.new(0.5,0,0.5,0)
+	UpdateLogText.Size = UDim2.new(1,-14,0,87)
+	UpdateLogText.Font = "Gotham"
+	UpdateLogText.Text = PatchNotes
+	UpdateLogText.TextColor3 = Color3.fromRGB(168,168,168)
+	UpdateLogText.TextSize = 15
+	UpdateLogText.TextTransparency = 1
+	UpdateLogText.TextWrapped = true
+	
+	CreditsFrame.AnchorPoint = Vector2.new(0.5,0.5)
+	CreditsFrame.BackgroundColor3 = Color3.fromRGB(79,79,79)
+	CreditsFrame.BackgroundTransparency = 1
+	CreditsFrame.Name = "CreditsFrame"
+	CreditsFrame.Position = UDim2.new(0.5,320,0.5,0)
+	CreditsFrame.Size = UDim2.new(0,192,0,191)
+	
+	CreditsFrameCorner.CornerRadius = UDim.new(0,11)
+	CreditsFrameCorner.Name = "CreditsFrameCorner"
+	
+	TitleCredits.AnchorPoint = Vector2.new(0,0.5)
+	TitleCredits.BackgroundTransparency = 1
+	TitleCredits.Name = "TitleCredits"
+	TitleCredits.Position = UDim2.new(0,0,0.5,-55)
+	TitleCredits.Size = UDim2.new(1,0,0,30)
+	TitleCredits.Font = "Gotham"
+	TitleCredits.Text = "Credits"
+	TitleCredits.TextColor3 = Color3.fromRGB(168,168,168)
+	TitleCredits.TextSize = 20
+	TitleCredits.TextTransparency = 1
+	
+	GlowCredits.BackgroundTransparency = 1
+	GlowCredits.BorderSizePixel = 0
+	GlowCredits.Name = "GlowCredits"
+	GlowCredits.Position = UDim2.new(0,-14,0,-12)
+	GlowCredits.Size = UDim2.new(1,28,1,24)
+	GlowCredits.ZIndex = 0
+	GlowCredits.Image = "rbxassetid://297774371"
+	GlowCredits.ImageColor3 = Color3.fromRGB(15,15,15)
+	GlowCredits.ImageTransparency = 1
+	GlowCredits.SliceCenter = Rect.new(20,20,280,280)
+	
+	ContainerCredits.AnchorPoint = Vector2.new(0.5,0.5)
+	ContainerCredits.BackgroundColor3 = Color3.fromRGB(33,33,33)
+	ContainerCredits.BackgroundTransparency = 1
+	ContainerCredits.Name = "ContainerCredits"
+	ContainerCredits.Position = UDim2.new(0.5,0,0.5,30)
+	ContainerCredits.Size = UDim2.new(1,-14,1,-84)
+	
+	ContainerCreditsCorner.CornerRadius = UDim.new(0,11)
+	ContainerCreditsCorner.Name = "ContainerCreditsCorner"
+	
+	CreditsText.AnchorPoint = Vector2.new(0.5,0.5)
+	CreditsText.BackgroundTransparency = 1
+	CreditsText.Name = "CreditsText"
+	CreditsText.Position = UDim2.new(0.5,0,0.5,0)
+	CreditsText.Size = UDim2.new(1,-14,0,87)
+	CreditsText.Font = "Gotham"
+	CreditsText.Text = Credits
+	CreditsText.TextColor3 =Color3.fromRGB(168,168,168)
+	CreditsText.TextSize = 15
+	CreditsText.TextTransparency = 1
+	CreditsText.TextWrapped = true
+	
+	for i,v in pairs(Frames) do
+		Tween:Create(v,TweenInfo.new(0.3),{BackgroundTransparency = 0}):Play()
+	end
+	
+	for i,v in pairs(Glows) do
+		Tween:Create(v,TweenInfo.new(0.3),{ImageTransparency = 0.3}):Play()
+	end
+	
+	for i,v in pairs(Texts) do
+		Tween:Create(v,TweenInfo.new(0.3),{TextTransparency = 0}):Play()
+	end
+	
+	LoadButton.MouseEnter:Connect(function()
+		Tween:Create(LoadButton,TweenInfo.new(0.3),{BackgroundColor3 = Color3.fromRGB(45,45,45)}):Play()
+	end)
+	
+	LoadButton.MouseLeave:Connect(function()
+		Tween:Create(LoadButton,TweenInfo.new(0.3),{BackgroundColor3 = Color3.fromRGB(39,39,39)}):Play()
+	end)
+	
+	LoadButton.MouseButton1Click:Connect(function()
+		if not Clicked then
+			Clicked = true
+			
+			for i,v in pairs(Texts) do
+				Tween:Create(v,TweenInfo.new(0.3),{TextTransparency = 1}):Play()
+			end
+			
+			for i,v in pairs(Glows) do
+				Tween:Create(v,TweenInfo.new(0.3),{ImageTransparency = 1}):Play()
+			end
+			
+			for i,v in pairs(Frames) do
+				Tween:Create(v,TweenInfo.new(0.3),{BackgroundTransparency = 1}):Play()
+			end
+			
+			wait(0.5)
+			
+			DarkHubLoader:Destroy()
+			
+			if IsSupported() then
+				for i,v in pairs(SupportedGames) do
+					if game.PlaceId == v then
+						loadstring(game:HttpGet("https://raw.githubusercontent.com/vq2unys9r8sv7ad5/Remastered/main/"..i))()
+						
+						return
+					end
+				end
+			else
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/vq2unys9r8sv7ad5/Remastered/main/Universal"))()
+			end
+		end
+	end)
+	
+	getgenv().DarkHubLoaded = true
+end
+
+if not getgenv().DarkHubLoaded then
+	Load()
+end
