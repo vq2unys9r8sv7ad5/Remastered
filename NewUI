@@ -1,4 +1,4 @@
-local CoreGui = game:GetService("CoreGui")
+local CoreGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
 if CoreGui:FindFirstChild("MarkBeatsIsGay") then
 	CoreGui.MarkBeatsIsGay:Destroy()
@@ -48,7 +48,7 @@ end
 
 function Ripple(Object)
 	spawn(function()
-		local MouseLocation = UserInput:GetMouseLocation()
+		local MouseLocation = UserInput:GetMouseLocation() - Vector2.new(0,36)
 		local Circle = Instance.new("ImageLabel",Object)
 		
 		Circle.BackgroundTransparency = 1
@@ -63,11 +63,9 @@ function Ripple(Object)
 		
 		Circle:TweenSizeAndPosition(UDim2.new(0,Size,0,Size),UDim2.new(0.5,-Size / 2,0.5,-Size / 2),"Out","Quad",0.2)
 		
-		for i = 1,15 do
-			Circle.ImageTransparency = Circle.ImageTransparency + 0.05
-			
-			wait()
-		end
+		Tween:Create(Circle,TweenInfo.new(0.25,Enum.EasingStyle.Linear),{ImageTransparency = 1}):Play()
+		
+		wait(0.25)
 		
 		Circle:Destroy()
 	end)
