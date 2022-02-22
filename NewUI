@@ -1,4 +1,4 @@
-local CoreGui = game:GetService("CoreGui")
+local CoreGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
 if CoreGui:FindFirstChild("MarkBeatsIsGay") then
 	CoreGui.MarkBeatsIsGay:Destroy()
@@ -10,66 +10,56 @@ local Tween = game:GetService("TweenService")
 local Run = game:GetService("RunService")
 
 Run.RenderStepped:Connect(function()
-	Library.RainbowColor = Color3.fromHSV(tick() % 6 / 6,1,1)
+	Library.RainbowColor = Color3.fromHSV(tick() % 5 / 5,1,1)
 end)
 
 local function MakeDraggable(TopBar,Object) 
-	pcall(function()
-		local Dragging = false
-		local DragInput,MousePosition,FramePosition
-		
-		TopBar.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-				Dragging = true
-				MousePosition = Input.Position
-				FramePosition = Object.Position
-				
-				Input.Changed:Connect(function()
-					if Input.UserInputState == Enum.UserInputState.End then
-						Dragging = false
-					end
-				end)
-			end
-		end)
-		
-		TopBar.InputChanged:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseMovement then
-				DragInput = Input
-			end
-		end)
-		
-		UserInput.InputChanged:Connect(function(Input)
-			if Input == DragInput and Dragging and Object.Parent.Enabled then
-				local Delta = Input.Position - MousePosition
-				
-				Object.Position = FramePosition + UDim2.new(0,Delta.X,0,Delta.Y)
-			end
-		end)
+	local Dragging = false
+	local DragInput,MousePosition,FramePosition
+	
+	TopBar.InputBegan:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			Dragging = true
+			MousePosition = Input.Position
+			FramePosition = Object.Position
+			
+			Input.Changed:Connect(function()
+				if Input.UserInputState == Enum.UserInputState.End then
+					Dragging = false
+				end
+			end)
+		end
+	end)
+	
+	TopBar.InputChanged:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseMovement then
+			DragInput = Input
+		end
+	end)
+	
+	UserInput.InputChanged:Connect(function(Input)
+		if Input == DragInput and Dragging and Object.Parent.Enabled then
+			local Delta = Input.Position - MousePosition
+			
+			Object.Position = FramePosition + UDim2.new(0,Delta.X,0,Delta.Y)
+		end
 	end)
 end
 
 function Ripple(Object)
 	spawn(function()
-		local MousePosition = UserInput:GetMouseLocation()
+		local MouseLocation = UserInput:GetMouseLocation()
 		local Circle = Instance.new("ImageLabel",Object)
 		
 		Circle.BackgroundTransparency = 1
 		Circle.Name = "Circle"
-		Circle.Position = UDim2.new(0,MousePosition.X - Circle.AbsolutePosition.X,0,MousePosition.Y - Circle.AbsolutePosition.Y)
+		Circle.Position = UDim2.new(0,MouseLocation.X - Circle.AbsolutePosition.X,0,MouseLocation.Y - Circle.AbsolutePosition.Y)
 		Circle.ZIndex = 10
 		Circle.Image = "rbxassetid://266543268"
 		Circle.ImageColor3 = Color3.fromRGB(211,211,211)
 		Circle.ImageTransparency = 0.6
 		
-		local Size = 0
-		
-		if Object.AbsoluteSize.X > Object.AbsoluteSize.Y then
-			Size = Object.AbsoluteSize.X
-		elseif Object.AbsoluteSize.X < Object.AbsoluteSize.Y then
-			Size = Object.AbsoluteSize.Y
-		elseif Object.AbsoluteSize.X == Object.AbsoluteSize.Y then
-			Size = Object.AbsoluteSize.X
-		end
+		local Size = math.max(Object.AbsoluteSize.X,Object.AbsoluteSize.Y)
 		
 		Circle:TweenSizeAndPosition(UDim2.new(0,Size,0,Size),UDim2.new(0.5,-Size / 2,0.5,-Size / 2),"Out","Quad",0.2)
 		
@@ -410,7 +400,7 @@ function Library:Window()
 			Value.TextSize = 14
 			
 			if Default then
-				local Position = UDim2.new((math.clamp(Default,Min,Max) - Min) * (192 / (Max - Min)) / 192,0,1,0)
+				local Position = UDim2.new((math.clamp(Default,Min,Max) - Min) * (SlideFrame.AbsoluteSize.X / (Max - Min)) / SlideFrame.AbsoluteSize.X,0,1,0)
 				
 				ValueFrame.Size = Position
 				
@@ -428,19 +418,17 @@ function Library:Window()
 				
 				ValueFrame:TweenSize(Position,"Out","Quart",0.3,true)
 				
-				local SlideValue = math.round(Position.X.Scale * Max / Max * (Max - Min) + Min)
+				local SlideValue = math.round(Position.X.Scale * (Max - Min) + Min)
 				
 				Value.Text = SlideValue
 				
-				spawn(function()
-					pcall(Callback,SlideValue)
-				end)
+				pcall(Callback,SlideValue)
 			end
 			
 			SlideFrame.InputBegan:Connect(function(Input)
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-					Slide(Input)
 					Dragging = true
+					Slide(Input)
 				end
 			end)
 			
@@ -465,7 +453,6 @@ function Library:Window()
 		
 		function TabContainer:Dropdown(Text,List,Callback)
 			local Down = false
-			local ItemCount = 0
 			local DropdownFrameSize = 0
 			local ItemFrameSize = 0
 			local Selected = Text
@@ -577,8 +564,6 @@ function Library:Window()
 			end)
 			
 			for i,v in next,List do
-				ItemCount = ItemCount + 1
-				
 				local Option = Instance.new("TextButton",DropItemHolder)
 				local OptionCorner = Instance.new("UICorner",Option)
 				
@@ -594,7 +579,7 @@ function Library:Window()
 				OptionCorner.CornerRadius = UDim.new(0,6)
 				OptionCorner.Name = "OptionCorner"
 				
-				if ItemCount < 4 then
+				if i < 4 then
 					DropdownFrameSize = DropItemHolderList.AbsoluteContentSize.Y + 8
 					ItemFrameSize = DropItemHolderList.AbsoluteContentSize.Y
 				else
@@ -911,7 +896,6 @@ function Library:Window()
 						Color.BackgroundColor3 = Library.RainbowColor
 						
 						ColorSelection.Position = UDim2.new(1,0,0,0)
-						
 						HueSelection.Position = UDim2.new(0.5,0,1 - Color3.toHSV(Library.RainbowColor),0)
 						
 						spawn(function()
@@ -929,9 +913,7 @@ function Library:Window()
 					ColorSelection.Position = OldColorSelectionPosition
 					HueSelection.Position = OldHueSelectionPosition
 					
-					spawn(function()
-						pcall(Callback,CurrentColor.BackgroundColor3)
-					end)
+					pcall(Callback,CurrentColor.BackgroundColor3)
 				end
 			end)
 			
@@ -951,7 +933,7 @@ function Library:Window()
 			ItemHolder.CanvasSize = UDim2.new(0,0,0,ItemHolderList.AbsoluteContentSize.Y)
 		end
 		
-		function TabContainer:Textbox(Text,Disapper,Callback,Default)
+		function TabContainer:Textbox(Text,Disappear,Callback,Default)
 			local Textbox = Instance.new("Frame",ItemHolder)
 			local TextboxCorner = Instance.new("UICorner",Textbox)
 			local Title = Instance.new("TextLabel",Textbox)
@@ -981,7 +963,7 @@ function Library:Window()
 			TextBox.Position = UDim2.new(1,-7,0,5)
 			TextBox.Size = UDim2.new(0,192,0,26)
 			TextBox.Font = "Gotham"
-			TextBox.Text = not Dissapear and Default or ""
+			TextBox.Text = not Disappear and Default or ""
 			TextBox.TextColor3 = Color3.fromRGB(195,195,195)
 			TextBox.TextSize = 14
 			
@@ -996,7 +978,7 @@ function Library:Window()
 				if Enter and #TextBox.Text > 0 then
 					TextBox:TweenSize(UDim2.new(0,192,0,26),"Out","Quart",0.1,true)
 					
-					if Disapper then
+					if Disappear then
 						TextBox.Text = ""
 					end
 					
